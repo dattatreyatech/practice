@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+<script>
+    app=angular.module("myapp",[])
+    app.controller("c1",function($scope,$http){
+        $scope.t1;
+        $scope.t2;
+        $scope.arr=[];
+        $scope.funget=function(){
+            $http.get("/api/getData").then(function(dt){
+                $scope.arr=dt.data
+            })
+        }
+        $scope.funins=function(){
+            var obj={
+                "user":$scope.t1,"password":$scope.t2
+            }
+            $http(
+            {
+                method:"Post",
+                url:"api/insert",
+                data:JSON.stringify(obj)
+            })
+             $http.get("/api/getData").then(function(dt){
+                $scope.arr=dt.data
+            })
+        }
+        $scope.fundel=function(){
+            $http({
+                method:"delete",
+                url:"api/del"
+            })
+            $http.get("/api/getData").then(function(dt){
+                $scope.arr=dt.data
+            })
+        }
+    })
+    </script>
+    <style>
+        th{
+            background-color: greenyellow;
+        }
+    </style>
+<body ng-app="myapp" ng-controller="c1">
+ <div align="center" >
+  <h1 style="color: deeppink;text-decoration:underline">Welcome</h1> 
+  <input type="button" value="GetData" ng-click="funget()" >
+  <input type="button" value="Remove All" ng-click="fundel()">
+  <br>
+  <table style="align-content: flex-end;background-color: gold" >
+  <tr> 
+  <td>   
+      UserName:</td><td><input type="text" placeholder="Enter User Name" ng-model="t1">
+      </td></tr>
+    <tr>     
+      <td>
+          Password:</td><td><input type="password" placeholder="Enter Password" ng-model="t2">
+      </td>  
+     </tr>
+     </table>
+  <input type="button" value="add" ng-click="funins()">
+  
+  <table border="1" style="align-items: center;border-color: red;background-color: aqua" width="300">
+      <th >UserName</th>
+      <th >Password</th><br>
+      <tr ng-repeat="x in arr" >
+          <td>{{x.user}}</td><td>{{x.password}}</td>
+      </tr>
+  </table>
+  </div> 
+</body>
+</html>
